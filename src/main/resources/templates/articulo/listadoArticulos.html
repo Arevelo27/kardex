@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <meta charset="UTF-8">
+        <title>Listado Clientes</title>
+    </head>
+    <body>
+        <section th:fragment="listadoArticulos">
+            <div class="container">
+                <div class="row" sec:authorize="isAuthenticated()">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>[[#{articulo.titulo-lista}]]</h4>
+                            </div>
+                            <div th:if="${articulos != null and !articulos.empty}">
+                                <table class="table table-stryped">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th th:text="#{articulo?.descripcion}">Descripcion</th>
+                                            <th th:text="#{articulo?.precioVenta}">Precio-venta</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="articulo, contador : ${articulos}">
+                                            <td>[[${contador.count}]]</td>
+                                            <td>[[${articulo?.descripcion}]]</td>
+                                            <td>[[${articulo?.precioVenta}]]</td>
+                                            <td>
+                                                <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/articulo/editar/} + ${articulo.idArticulo}" class="btn btn-secondary">
+                                                    <i class="fas fa-angle-double-right"></i> [[#{accion.editar}]]
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/articulo/eliminar(idPersona=${articulo.idArticulo})}" class="btn btn-dark">
+                                                    <i class="fas fa-angle-double-right"></i> [[#{accion.eliminar}]]
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center p-2"  th:if="${articulos == null or articulos.empty}">
+                                <span th:text="#{articulo.lista-vacia}">Lista Vacía</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card text text-center bg-success text-while mb-3">
+                            <div class="card-body">
+                                <h3 th:text="#{articulo.totalArticulos}">Total Articulos</h3>
+                                <h4 class="display-4">
+                                    <i class="fas fa-user"></i>[[${totalClientes}]]
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
